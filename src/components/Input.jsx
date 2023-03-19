@@ -16,6 +16,7 @@ import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
 
 const Input = () => {
   const [text, setText] = useState("");
+  const [fileInput, setFileInput] = useState("");
   const [img, setImg] = useState(null);
   const { currentUser } = useContext(AuthContext);
   const { data } = useContext(ChatContext);
@@ -60,7 +61,7 @@ const Input = () => {
           });
         }
       );
-    } else {
+    } else if (text) {
       await updateDoc(doc(db, "chats", data.chatId), {
         messages: arrayUnion({
           id: uuid(),
@@ -84,6 +85,7 @@ const Input = () => {
     });
     setText("");
     setImg(null);
+    setFileInput("");
   };
   return (
     <div className="input">
@@ -100,6 +102,7 @@ const Input = () => {
           style={{ display: "none" }}
           id="file"
           onChange={(e) => setImg(e.target.files[0])}
+          value={fileInput}
         />
         <label htmlFor="file">
           <img src={Img} alt="" />
