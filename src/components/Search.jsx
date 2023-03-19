@@ -12,11 +12,13 @@ import {
   serverTimestamp,
 } from "firebase/firestore";
 import { AuthContext } from "../context/AuthContext";
+import { ChatContext } from "../context/ChatContext";
 const Search = () => {
   const { currentUser } = useContext(AuthContext);
   const [username, setUsername] = useState("");
   const [user, setUser] = useState(null);
   const [error, setError] = useState(false);
+  const { dispatch } = useContext(ChatContext);
   const handleSearch = async () => {
     const q = query(
       collection(db, "users"),
@@ -59,16 +61,19 @@ const Search = () => {
           [chatID + ".date"]: serverTimestamp(),
         });
         await updateDoc(doc(db, "userChats", user.uid), {
-            [chatID + ".userInfo"]: {
-              uid: currentUser.uid,
-              displayName: currentUser.displayName,
-              photoURL: currentUser.photoURL,
-            },
-            [chatID + ".date"]: serverTimestamp(),
-          });
+          [chatID + ".userInfo"]: {
+            uid: currentUser.uid,
+            displayName: currentUser.displayName,
+            photoURL: currentUser.photoURL,
+          },
+          [chatID + ".date"]: serverTimestamp(),
+        });
       }
     } catch (err) {
       setError(true);
+    }
+    if (!error) {
+      dispatch({ type: "CHANGE_USER", payload: user });
     }
     setUser(null);
     setUsername("");

@@ -13,7 +13,6 @@ import {
 import { db, storage } from "../firebase";
 import { v4 as uuid } from "uuid";
 import { getDownloadURL, ref, uploadBytesResumable } from "firebase/storage";
-import { json } from "react-router-dom";
 
 const Input = () => {
   const [text, setText] = useState("");
@@ -36,6 +35,8 @@ const Input = () => {
               break;
             case "running":
               console.log("Upload is running");
+              break;
+            default:
               break;
           }
         },
@@ -93,7 +94,7 @@ const Input = () => {
         value={text}
       />
       <div className="send">
-        {/* <img src={Img} alt="" /> */}
+        <img src={Attach} alt="" />
         <input
           type="file"
           style={{ display: "none" }}
